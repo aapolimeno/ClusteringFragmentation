@@ -7,18 +7,15 @@ Created on Wed Mar 23 11:11:15 2022
 """
 
 from datasets import load_dataset
-from numpy import mean
 import pandas as pd
-import requests
 import trafilatura
-from collections import Counter
 
 ### Load dataset as pandas DataFrame
 
 data = load_dataset('hlgd', script_version="master")
 
 hlgd_validation = data['validation']
-hlgd_test = data['test']
+hlgd_train = data['train']
 hlgd_train = data['train']
 
 
@@ -63,14 +60,14 @@ hlgd_texts = pd.DataFrame.from_dict(raw_texts, orient = 'index', columns = ['tex
 hlgd_texts = hlgd_texts.dropna()
 # Write to csv 
 
-#hlgd_texts.to_csv('../data/hlgd_texts_train.csv', index=True)
+hlgd_texts.to_csv('../../data/hlgd_texts_train.csv', index=True)
 
 # Read again so that column names can be changed (This could not be done before
 # because the df was constructed from a dict, and for some reason the url column
 # could not be changed from 'index' to 'url'. However, this column has to be 
 # retrieved in the following steps.)
 
-hlgd_merge = pd.read_csv('../data/hlgd_texts_train.csv', index_col=0)
+hlgd_merge = pd.read_csv('../../data/hlgd_texts_train.csv', index_col=0)
 
 # Give correct column names
 
@@ -78,7 +75,7 @@ hlgd_merge.columns = ['url', 'text']
 
 # Save data with correct column names 
 
-# hlgd_merge.to_csv('../data/hlgd_texts_train.csv', index=True)
+hlgd_merge.to_csv('../../data/hlgd_texts_train2.csv', index=True)
 
 
 ### filter out irretrievable urls from training data set 
@@ -113,11 +110,12 @@ df_train = df_train[df_train['retrievable_col2'] == 1]
 df_train = df_train.drop(['retrievable_col1', 'retrievable_col2'], axis = 1)
 
 
+
 # save filtered data set 
-df_train.to_csv('../data/hlgd_train_full.csv', index = True)
+df_train.to_csv('../../data/hlgd_train_full.csv', index = True)
 
 
-
+# get some stats 
 dates = df_train['date_a'].tolist()
 dates2 = df_train['date_b'].tolist()
 for date in dates2: 
@@ -125,3 +123,6 @@ for date in dates2:
     
 print(min(dates))
 print(max(dates))
+
+
+
