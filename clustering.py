@@ -33,12 +33,12 @@ def remove_punc(text):
 
 
 # ============= Load and preprocess data ============= 
-# HLGD
+# Load
 hlgd_texts_train = pd.read_csv('../../data/hlgd_text_train.csv', index_col=0)
 hlgd_links = hlgd_texts_train['url'].tolist()
 hlgd_texts = hlgd_texts_train['text'].tolist()
 
-# preprocessing 
+# Preprocessing 
 hlgd_texts = [text.lower() for text in hlgd_texts] # convert to lowercase
 hlgd_texts = [remove_punc(text) for text in hlgd_texts] # remove punctuation
 
@@ -61,9 +61,6 @@ plt.xlabel('Articles')
 plt.ylim(0, 1000)
 plt.ylabel('Euclidean distances')
 plt.show()
-
-
-## Import clustering module
 
 hca = AgglomerativeClustering(n_clusters = 6, affinity = 'euclidean', linkage = 'ward')
 y_hca = hca.fit_predict(hlgd_vectors)
