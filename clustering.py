@@ -4,6 +4,10 @@
 Created on Sat Mar 26 12:13:11 2022
 
 @author: alessandrapolimeno
+
+This script performs clustering. First, representations are created with a 
+Bag of Words model. Then, hierarchical clustering is applied to the BoW vectors. 
+Finally, the predicted cluster labels are compared to the gold labels. 
 """
 
 import matplotlib.pyplot as plt
