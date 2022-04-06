@@ -17,3 +17,12 @@ user_ids = behaviors["user_id"].tolist()
 uis_set = set(user_ids)
 
 
+raw_recs = behaviors["recs"].tolist()
+all_recs = []
+
+for line in raw_recs: 
+    line = line.split(" ")
+    for item in line: 
+        all_recs.append(item)
+
+all_recs = set(all_recs)
