@@ -7,7 +7,7 @@ Created on Tue Apr  5 16:15:22 2022
 import pandas as pd 
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, calinski_harabasz_score, davies_bouldin_score
 
 
 def remove_punc(text):
@@ -70,6 +70,10 @@ pred_clusters = pd.DataFrame(urls, columns = ['url'])
 pred_clusters['pred_label'] = cluster_assignment
 
 
+# ============= External evaluation =============
+ch_score = calinski_harabasz_score(bow_vectors, cluster_assignment)
+db_score = davies_bouldin_score(bow_vectors, cluster_assignment)
+
 # ============= Prepare evaluation ============= 
 
 eval_data = pd.read_csv("../../data/eval_data_hlgd_t.csv")
@@ -99,8 +103,6 @@ eval_data['gold_label'] = converted_labels
 
 # Save model output
 # eval_data.to_csv('../../data/eval_hlgd_tr_BERT.csv', index = True)
-
-
 
 
 

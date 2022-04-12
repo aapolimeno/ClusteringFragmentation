@@ -7,16 +7,21 @@ Created on Thu Apr  7 17:24:36 2022
 
 import pandas as pd 
 from sklearn.metrics import confusion_matrix, classification_report, precision_recall_fscore_support
-
+from sklearn.metrics.cluster import homogeneity_completeness_v_measure
 
 
 # ========== Load evaluation data ==========
 eval_data = pd.read_csv('../../data/eval_hlgd_tr_BERT.csv',)
 
-# === Confusion matrix === 
+
 true = eval_data['gold_label'].tolist()
 pred = eval_data['pred_label'].tolist()
 
+# ========== V-Measure ==========
+
+hcv = homogeneity_completeness_v_measure(true, pred)
+
+# === Confusion matrix === 
 confusion_matrix = confusion_matrix(true, pred)
 df_cm = pd.DataFrame(confusion_matrix)
 print(df_cm.to_latex(index_names = True ))
