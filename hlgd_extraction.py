@@ -126,9 +126,12 @@ dates = df_train['date_a'].tolist()
 dates2 = df_train['date_b'].tolist()
 for date in dates2: 
     dates.append(date)
-    
-print(min(dates))
-print(max(dates))
 
+print("==================================")
+print("Range of dates: ")    
+print("First date: ", min(dates))
+print("Last date: ", max(dates))
+print("==================================")
+print()
 
 
