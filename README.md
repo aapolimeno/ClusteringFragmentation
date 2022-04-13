@@ -15,7 +15,6 @@ c) Merge train and test with merge_train_test.py
 
 
 Step 2: Perform clustering 
-a) 
 
 
 Step 3: Generate recommendations 
