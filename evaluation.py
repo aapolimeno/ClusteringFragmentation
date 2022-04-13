@@ -8,10 +8,11 @@ Created on Thu Apr  7 17:24:36 2022
 import pandas as pd 
 from sklearn.metrics import confusion_matrix, classification_report, precision_recall_fscore_support
 from sklearn.metrics.cluster import homogeneity_completeness_v_measure
-
+import numpy as np
+from sklearn import metrics
 
 # ========== Load evaluation data ==========
-eval_data = pd.read_csv('../../data/eval_hlgd_tr_BERT.csv',)
+eval_data = pd.read_csv('../../data/eval_hlgd_tr_BERT.csv', index=True)
 
 
 true = eval_data['gold_label'].tolist()
@@ -20,6 +21,18 @@ pred = eval_data['pred_label'].tolist()
 # ========== V-Measure ==========
 
 hcv = homogeneity_completeness_v_measure(true, pred)
+
+
+# ============ Purity ============
+def purity_score(y_true, y_pred):
+    # compute contingency matrix (also called confusion matrix)
+    contingency_matrix = metrics.cluster.contingency_matrix(true, pred)
+    # return purity
+    return np.sum(np.amax(contingency_matrix, axis=0)) / np.sum(contingency_matrix)
+
+
+
+
 
 # === Confusion matrix === 
 confusion_matrix = confusion_matrix(true, pred)
