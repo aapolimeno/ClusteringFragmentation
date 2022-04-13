@@ -11,7 +11,7 @@ be filtered out. This script filters the training data of the HLGD dataset.
 
 import pandas as pd
 
-hlgd_train = pd.read_csv('../../data/hlgd_texts_train.csv', index_col=0)
+hlgd_train = pd.read_csv('../../../data/hlgd_texts_train.csv', index_col=0)
 
 
 # ============= Remove recommended titles=============
@@ -77,4 +77,4 @@ remove_list_c = [623, 579, 572, 569, 465, 374, 351, 346, 338, 307, 293,
 hlgd_train = hlgd_train.drop(labels = remove_list_c, axis = 0)
 
 # Save the cleaned dataset 
-hlgd_train.to_csv('../../data/hlgd_text_train2.csv', index = True)
+hlgd_train.to_csv('../../../data/hlgd_text_train2.csv', index = True)
