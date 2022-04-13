@@ -16,21 +16,21 @@ from spacy.cli import download
 download("en_core_web_md")
 
 # ============= Load data =============
-hlgd_texts_train = pd.read_csv('../../data/hlgd_text_train.csv', index_col=0)
-urls = hlgd_texts_train['url'].tolist()
-sentences = hlgd_texts_train['text'].tolist()
+hlgd_texts = pd.read_csv('../../data/hlgd_texts.csv', index_col=0)
+urls = hlgd_texts['url'].tolist()
+sentences = hlgd_texts['text'].tolist()
 
 
 sentences = sentences
 # ============= Get embeddings ============= 
 
-def get_embeddings(sentences, type = "sentence"): 
+def get_embeddings(sentences, method = "SBERT"): 
     
-    if type == "sentence":
+    if method == "SBERT":
         model = SentenceTransformer('all-MiniLM-L6-v2') 
         embeddings = model.encode(sentences)
         
-    if type == "word": 
+    if method == "word": 
         embeddings = []
         nlp = spacy.load('en_core_web_md')
         for sent in sentences: 
@@ -39,7 +39,7 @@ def get_embeddings(sentences, type = "sentence"):
     return embeddings
     
         
-embeddings = get_embeddings(sentences, type = "word")
+embeddings = get_embeddings(sentences, method = "word")
 
 
 # ============= Apply clustering ============= 
@@ -72,12 +72,11 @@ db_score = davies_bouldin_score(embeddings, cluster_assignment)
 
 
 # Load gold data
-eval_data = pd.read_csv("../../data/eval_data_hlgd_t.csv")
+eval_data = pd.read_csv("../../data/eval_data_hlgd_t.csv", index_col=0)
 
 # Merge gold labels with predicted labels
 eval_data = eval_data.merge(pred_clusters, left_on='url', right_on='url')
 eval_data = eval_data.drop(['chain_id'], axis = 1)
-eval_data = eval_data.drop(['Unnamed: 0'], axis = 1)
 
 # Create a dataframe for each predicted label to investigate the overlap 
 df4 = eval_data.loc[eval_data['pred_label'] == 4]
@@ -91,8 +90,16 @@ df3 = eval_data.loc[eval_data['pred_label'] == 3]
 
 
 # Convert gold labels to predicted format 
-convert_dict = {9 : 1, 1 : 0 , 2 : 2, 3 : 3, 6 : 4, 4 : 5} # for word embeddings 
-#convert_dict = {1:0, 4:1, 2:2, 9:3, 3:4, 6:5} # for sentence embeddings 
+
+def get_conversion_dict(method = "word"): 
+    if method == "word": 
+        convert_dict = {9:1, 1:0 , 2:2, 3:3, 6:4, 4:5}
+    if method == "SBERT": 
+        convert_dict = {1:0, 4:1, 2:2, 9:3, 3:4, 6:5}
+        
+    return convert_dict
+
+convert_dict = get_conversion_dict("SBERT")
 gold_labels = eval_data['gold_label'].tolist()
 
 converted_labels = []
