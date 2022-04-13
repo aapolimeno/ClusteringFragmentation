@@ -19,4 +19,4 @@ a)
 
 
 Step 3: Generate recommendations 
-- For random recommendations, see random_recs.py
+- For random recommendations, run random_recs.py

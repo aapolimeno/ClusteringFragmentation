@@ -11,12 +11,8 @@ from sklearn.metrics.cluster import homogeneity_completeness_v_measure
 import numpy as np
 from sklearn import metrics
 
-# ========== Load evaluation data ==========
-eval_data = pd.read_csv('../../data/eval_hlgd_tr_BERT.csv', index=True)
-
-
-true = eval_data['gold_label'].tolist()
-pred = eval_data['pred_label'].tolist()
+# ========== Load evaluation and gold data ==========
+eval_data = pd.read_csv('../../data/hlgd_predictions/predictions_dev.csv', index_col = 0)
 
 # ========== V-Measure ==========
 

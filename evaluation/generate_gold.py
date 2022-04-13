@@ -128,3 +128,16 @@ gold_merge['gold_label'] = new_labels
 gold_merge.to_csv('../../data/gold_labels.csv', index = True)
 
 
+
+# ================= Explore ================= 
+c0 =  dev_label.loc[dev_label['gold_label'] == 0]
+c1 =  dev_label.loc[dev_label['gold_label'] == 1]
+c2 =  gold_merge.loc[gold_merge['gold_label'] == 2]
+c3 =  gold_merge.loc[gold_merge['gold_label'] == 3]
+c4 =  gold_merge.loc[gold_merge['gold_label'] == 4]
+c5 =  gold_merge.loc[gold_merge['gold_label'] == 5]
+c6 =  gold_merge.loc[gold_merge['gold_label'] == 6]
+c7 =  gold_merge.loc[gold_merge['gold_label'] == 7]
+c8 =  gold_merge.loc[gold_merge['gold_label'] == 8]
+c9 =  gold_merge.loc[gold_merge['gold_label'] == 9]
+
