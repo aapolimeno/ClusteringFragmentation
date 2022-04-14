@@ -8,14 +8,25 @@ Created on Wed Apr 13 17:00:58 2022
 import pandas as pd 
 
 # ========== Load evaluation and gold data ==========
-eval_data = pd.read_csv('../../data/hlgd_predictions/predictions_dev_raw.csv', index_col = 0)
-gold_data = pd.read_csv('../../data/hlgd_predictions/gold_dev.csv', index_col=0)
+eval_data = pd.read_csv('../../data/hlgd_predictions/predictions_raw.csv', index_col = 0)
+gold_data = pd.read_csv('../../data/hlgd_predictions/gold_labels.csv', index_col=0)
 
 eval_data = eval_data.merge(gold_data, left_on='url', right_on='url')
 
 pred_SBERT = eval_data['SBERT_pred'].tolist()
 pred_word = eval_data['word_pred'].tolist()
 pred_bow = eval_data['BoW_pred'].tolist()
+
+# Inspect each cluster 
+c2 =  eval_data.loc[eval_data['gold_label'] == 2]
+c3 =  eval_data.loc[eval_data['gold_label'] == 3]
+c4 =  eval_data.loc[eval_data['gold_label'] == 4]
+c5 =  eval_data.loc[eval_data['gold_label'] == 5]
+c6 =  eval_data.loc[eval_data['gold_label'] == 6]
+c7 =  eval_data.loc[eval_data['gold_label'] == 7]
+c8 =  eval_data.loc[eval_data['gold_label'] == 8]
+c9 =  eval_data.loc[eval_data['gold_label'] == 9]
+
 
 
 # ============ Convert labels to gold format ============
@@ -59,8 +70,13 @@ def perform_conversion(method):
 
 methods = ["SBERT", "word", "BoW"]
 
+print("==================================================")
+
 for method in methods: 
+    print(f"converting the labels of {method} representations...")
     perform_conversion(method)
-    
+
+print("Done!")  
+print("==================================================")  
 
 eval_data.to_csv('../../data/hlgd_predictions/predictions_dev.csv', index = True)

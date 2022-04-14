@@ -19,7 +19,7 @@ import spacy
 
 
 # =================== Load data ===================
-data = pd.read_csv('../../data/hlgd_texts_dev.csv', index_col=0)
+data = pd.read_csv('../../data/hlgd_texts.csv', index_col=0)
 urls = data['url'].tolist()
 sentences = data['text'].tolist()
 
@@ -55,9 +55,17 @@ def get_representation(sentences, method = "word"):
     return embeddings
     
 
-def get_clusters(embeddings, n_clusters = 8):
+def get_clusters(embeddings, method, dev = 0):
     
-    clustering_model = AgglomerativeClustering(n_clusters = n_clusters, linkage = 'ward') #, affinity='cosine', linkage='average', distance_threshold=0.4)
+    if method == "BoW": 
+        clustering_model = AgglomerativeClustering(n_clusters=None, distance_threshold = 200 ,linkage = 'ward')
+    else: 
+        if dev == 0: 
+            n_clusters = 8
+        else: 
+            n_clusters = 2
+        clustering_model = AgglomerativeClustering(n_clusters = n_clusters, linkage = 'ward') #, affinity='cosine', linkage='average', distance_threshold=0.4)
+    
     clustering_model.fit(embeddings)
     cluster_assignment = clustering_model.labels_
     
@@ -74,25 +82,26 @@ def get_clusters(embeddings, n_clusters = 8):
 
 # ============ Represent the articles with the desired method ============
 # Options: SBERT (sentence embeddings), word (word embeddings), BoW (Bag of Words)
-
 methods = ["SBERT", "word", "BoW"]
-pred_clusters = pd.DataFrame(urls, columns = ['url'])
 
+pred_clusters = pd.DataFrame(urls, columns = ['url'])
 
 for method in methods:
     print("===================================================================")
     print(f"Get article representation with method {method}...")
     embeddings = get_representation(sentences, method = method)
     print(f"Performing agglomerative hierarchical clustering for {method} representations...")
-    clusters = get_clusters(embeddings, n_clusters = 2)
+    clusters = get_clusters(embeddings, method, dev = 0)
     print(f"Save {method} clustering outcome...")
     pred_clusters[f'{method}_pred'] = clusters
-    print()
+print()
+print("===================================================================")
 print("All done!")
 print("===================================================================")
     
+print(set(clusters))
 
 # ============ Save ============ 
-pred_clusters.to_csv('../../data/hlgd_predictions/predictions_dev_raw.csv', index = True)
+pred_clusters.to_csv('../../data/hlgd_predictions/predictions_raw.csv', index = True)
 
 
