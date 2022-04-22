@@ -14,6 +14,10 @@ test = pd.read_csv('../../data/hlgd_texts_test.csv', index_col=0)
 # ============= Merge =============
 merge = train.append(test, ignore_index = True)
 
+# ============= Additional cleaning =============
+
+merge = merge.drop(index = [16, 166, 384, 388, 520])
+
 # ============= Save ============= 
 merge.to_csv('../../data/hlgd_texts.csv', index = True)
 

@@ -21,7 +21,7 @@ full_data.to_csv("../../data/article_ids_train.csv")
 
 # ================== Generate random recommendations ================== 
 
-users = [i for i in range(1000)] # 100 users 
+users = [i for i in range(717)] # 100 users 
 
 random_recs = pd.DataFrame()
 random_recs["user_id"] = users
@@ -29,7 +29,7 @@ random_recs["user_id"] = users
 recs = []
 
 for user in users: 
-    rec = random.choices(index, k = 15) # 15 recs per user 
+    rec = random.choices(index, k = 20) # 15 recs per user 
     recs.append(rec)
 
 random_recs["recs"] = recs

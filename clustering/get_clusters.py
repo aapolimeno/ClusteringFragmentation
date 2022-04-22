@@ -24,10 +24,7 @@ urls = data['url'].tolist()
 sentences = data['text'].tolist()
 
 
-# =================== Get embeddings ================================ 
-
-# options: SBERT sentence embeds, SpaCy word embeds, BoW 
-
+# =================== Get embeddings =================== 
 
 def get_BoW(sentences): 
     CountVec = CountVectorizer(ngram_range=(1,1), stop_words='english')

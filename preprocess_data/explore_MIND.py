@@ -26,3 +26,17 @@ for line in raw_recs:
         all_recs.append(item)
 
 all_recs = set(all_recs)
+
+
+
+# ========== Load CI&T DeskDrop recommendations ========== 
+# articles  
+articles = pd.read_csv("../../data/CIT_DeskDrop/shared_articles.csv")
+articles = articles[articles.lang != "pt"]
+articles = articles[articles.eventType != "CONTENT REMOVED"]
+
+# user interactions 
+users = pd.read_csv("../../data/CIT_DeskDrop/users_interactions.csv")
+
+unique_users = set(users['personId'].tolist())
+unique_articles = set(articles['text'].tolist())
