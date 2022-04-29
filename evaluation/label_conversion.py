@@ -51,16 +51,24 @@ c5 =  eval_data.loc[eval_data['word_pred'] == 5]
 c6 =  eval_data.loc[eval_data['word_pred'] == 6]
 c7 =  eval_data.loc[eval_data['word_pred'] == 7]
 
+
+c0 =  eval_data.loc[eval_data["SBERT_pred"] == 0]
+c1 =  eval_data.loc[eval_data["SBERT_pred"] == 1]
+c2 =  eval_data.loc[eval_data['SBERT_pred'] == 2]
+c3 =  eval_data.loc[eval_data['SBERT_pred'] == 3]
+c4 =  eval_data.loc[eval_data['SBERT_pred'] == 4]
+c5 =  eval_data.loc[eval_data['SBERT_pred'] == 5]
+c6 =  eval_data.loc[eval_data['SBERT_pred'] == 6]
+c7 =  eval_data.loc[eval_data['SBERT_pred'] == 7]
+
+
 filter_indeces = c6.index.tolist()
-
-
 
 filter_sents = data.iloc[[ind for ind in filter_indeces]]
 for num, sent in enumerate(filter_sents['text'].tolist()):
     print(num)
     print(sent)
     print()
-
 
 
 # ============ Convert labels to gold format ============

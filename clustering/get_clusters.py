@@ -7,7 +7,7 @@ Created on Wed Apr 13 15:58:09 2022
 
 import pandas as pd 
 from sentence_transformers import SentenceTransformer
-from sklearn.cluster import AgglomerativeClustering
+from sklearn.cluster import AgglomerativeClustering, DBSCAN
 from sklearn.feature_extraction.text import CountVectorizer
 import spacy
 
@@ -52,34 +52,41 @@ def get_representation(sentences, method = "word"):
     return embeddings
     
 
-def get_clusters(embeddings, method, dev = 0):
+def get_clusters(embeddings, method, dev = 0, alg = "AC"):
     
-    if method == "BoW": 
-        clustering_model = AgglomerativeClustering(n_clusters=None, distance_threshold = 200 ,linkage = 'ward')
-    else: 
+    
+    if alg == "AC":
+
         if dev == 0: 
             n_clusters = 8
         else: 
             n_clusters = 2
+            
         clustering_model = AgglomerativeClustering(n_clusters = n_clusters, linkage = 'ward') #, affinity='cosine', linkage='average', distance_threshold=0.4)
     
-    clustering_model.fit(embeddings)
-    cluster_assignment = clustering_model.labels_
-    
-    clustered_sentences = {}
-    for sentence_id, cluster_id in enumerate(cluster_assignment):
-        if cluster_id not in clustered_sentences:
-            clustered_sentences[cluster_id] = []
-    
-        clustered_sentences[cluster_id].append(sentences[sentence_id])
+        clustering_model.fit(embeddings)
+        cluster_assignment = clustering_model.labels_
         
+        clustered_sentences = {}
+        for sentence_id, cluster_id in enumerate(cluster_assignment):
+            if cluster_id not in clustered_sentences:
+                clustered_sentences[cluster_id] = []
+        
+            clustered_sentences[cluster_id].append(sentences[sentence_id])
+        
+    if alg == "DBScan": 
+        clustering = DBSCAN(eps=0.5, min_samples=25).fit(embeddings)
+        cluster_assignment = clustering.labels_
+    
     return cluster_assignment
 
 
 
 # ============ Represent the articles with the desired method ============
 # Options: SBERT (sentence embeddings), word (word embeddings), BoW (Bag of Words)
-methods = ["SBERT", "word", "BoW"]
+#methods = ["SBERT", "word", "BoW"]
+
+methods = ["BoW"]
 
 pred_clusters = pd.DataFrame(urls, columns = ['url'])
 
@@ -88,7 +95,7 @@ for method in methods:
     print(f"Get article representation with method {method}...")
     embeddings = get_representation(sentences, method = method)
     print(f"Performing agglomerative hierarchical clustering for {method} representations...")
-    clusters = get_clusters(embeddings, method, dev = 0)
+    clusters = get_clusters(embeddings, method, dev = 0, alg = "DBScan")
     print(f"Save {method} clustering outcome...")
     pred_clusters[f'{method}_pred'] = clusters
 print()
@@ -99,6 +106,6 @@ print("===================================================================")
 print(set(clusters))
 
 # ============ Save ============ 
-pred_clusters.to_csv('../../data/hlgd_predictions/predictions_raw.csv', index = True)
+#pred_clusters.to_csv('../../data/hlgd_predictions/predictions_raw.csv', index = True)
 
 
