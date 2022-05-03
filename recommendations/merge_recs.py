@@ -70,5 +70,6 @@ for user in users:
     
 recs["random_recs"] = random_recs
 
+recs = pd.read_csv("../../data/recommendations/recs.csv")
 
-recs.to_csv("../../data/recommendations/recs.csv", index=False)
+# recs.to_csv("../../data/recommendations/recs.csv", index=False)

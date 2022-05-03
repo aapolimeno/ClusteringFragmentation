@@ -21,3 +21,5 @@ merge = merge.drop(index = [16, 166, 384, 388, 520])
 # ============= Save ============= 
 merge.to_csv('../../data/hlgd_texts.csv', index = True)
 
+
+

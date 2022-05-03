@@ -19,7 +19,8 @@ import spacy
 
 
 # =================== Load data ===================
-data = pd.read_csv('../../data/hlgd_texts.csv', index_col=0)
+#data = pd.read_csv('../../data/hlgd_texts_dev.csv', index_col=0)
+data = pd.read_csv('../../data/new_split/new_train.csv', index_col=0)
 urls = data['url'].tolist()
 sentences = data['text'].tolist()
 
@@ -52,17 +53,19 @@ def get_representation(sentences, method = "word"):
     return embeddings
     
 
-def get_clusters(embeddings, method, dev = 0, alg = "AC"):
+def get_clusters(embeddings, method, alg = "AC"):
     
     
     if alg == "AC":
 
-        if dev == 0: 
-            n_clusters = 8
-        else: 
-            n_clusters = 2
+# =============================================================================
+#         if method == "BoW" :
+#             distance_threshold = 250
+#         else: 
+#             distance_threshold = 5
+# =============================================================================
             
-        clustering_model = AgglomerativeClustering(n_clusters = n_clusters, linkage = 'ward') #, affinity='cosine', linkage='average', distance_threshold=0.4)
+        clustering_model = AgglomerativeClustering(n_clusters = None, linkage = 'ward', distance_threshold = 5) #, affinity='cosine', linkage='average', distance_threshold=0.4)
     
         clustering_model.fit(embeddings)
         cluster_assignment = clustering_model.labels_
@@ -75,7 +78,18 @@ def get_clusters(embeddings, method, dev = 0, alg = "AC"):
             clustered_sentences[cluster_id].append(sentences[sentence_id])
         
     if alg == "DBScan": 
-        clustering = DBSCAN(eps=0.5, min_samples=25).fit(embeddings)
+        
+        if method == "SBERT": 
+            ep = 1
+            min_samples = 5
+        if method == "BoW": 
+            ep = 10
+            min_samples = 5
+        if method == "word": 
+            ep = 0.5
+            min_samples = 5
+        
+        clustering = DBSCAN(eps=ep, min_samples=min_samples).fit(embeddings)
         cluster_assignment = clustering.labels_
     
     return cluster_assignment
@@ -84,26 +98,36 @@ def get_clusters(embeddings, method, dev = 0, alg = "AC"):
 
 # ============ Represent the articles with the desired method ============
 # Options: SBERT (sentence embeddings), word (word embeddings), BoW (Bag of Words)
-#methods = ["SBERT", "word", "BoW"]
+methods = ["SBERT", "word", "BoW"]
 
-methods = ["BoW"]
+# methods = ["word"]
 
 pred_clusters = pd.DataFrame(urls, columns = ['url'])
+
+# distance_thresholds = [3,4,6,7]
+
+
 
 for method in methods:
     print("===================================================================")
     print(f"Get article representation with method {method}...")
     embeddings = get_representation(sentences, method = method)
+    
+    #for distance in distance_thresholds: 
     print(f"Performing agglomerative hierarchical clustering for {method} representations...")
-    clusters = get_clusters(embeddings, method, dev = 0, alg = "DBScan")
+    # print(f"Distance threshold {distance}")
+    #print(f"Eps {ep}")
+    clusters = get_clusters(embeddings, method, alg = "DBScan")
+    print(set(clusters))
     print(f"Save {method} clustering outcome...")
     pred_clusters[f'{method}_pred'] = clusters
+    
 print()
 print("===================================================================")
 print("All done!")
 print("===================================================================")
     
-print(set(clusters))
+# print(set(clusters))
 
 # ============ Save ============ 
 #pred_clusters.to_csv('../../data/hlgd_predictions/predictions_raw.csv', index = True)
