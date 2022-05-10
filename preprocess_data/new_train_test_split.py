@@ -26,3 +26,7 @@ new_train = new_train[new_train["gold_label"] != 2]
 # Save newly splitted data 
 new_dev.to_csv("../../data/new_split/new_dev.csv")
 new_train.to_csv("../../data/new_split/new_train.csv")
+
+
+#new_dev.to_csv("../../data/hlgd_texts_dev.csv")
+#new_train.to_csv("../../data/hlgd_texts.csv")
