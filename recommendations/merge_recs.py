@@ -63,12 +63,18 @@ all_articles.extend(all_hybrid_articles)
 # Generate recs for each user 
 users = recs["person_id"].tolist()
 
+
+
+
 random_recs = []
 for user in users: 
-    rec = random.choices(all_articles, k = 20) # 15 recs per user 
+    rec = random.choices(all_articles, k = 20) # 20 recs per user 
     random_recs.append(rec)
     
 recs["random_recs"] = random_recs
+
+
+
 
 recs = pd.read_csv("../../data/recommendations/recs.csv")
 
