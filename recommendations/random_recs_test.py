@@ -11,6 +11,7 @@ import math
 from scipy.stats import entropy
 from numpy.linalg import norm
 import itertools
+from numpy import mean
 
 # =================== FUNCTIONS ===================
 
@@ -162,18 +163,15 @@ random_recs["chains"] = recs
 #    for subset in itertools.combinations(recs, L):
 #       print(subset)
 
+# ======================== CALCULATE DIVERSION ========================
+
 combinations = list(itertools.combinations(recs, 2))
-
-
-rec1 = recs[0]
-rec2 = recs[1]
 
 all_divergences = []
 
 for comb in combinations: 
     divergence = compare_recommendations(comb[0], comb[1])
-    all_divergences.append(divergence)
+    all_divergences.append(divergence[0])
+    all_divergences.append(divergence[1])    
     
-    
-# ======================== CALCULATE DIVERSION ========================
-divergence = compare_recommendations(rec1, rec2)
+print(mean(all_divergences))

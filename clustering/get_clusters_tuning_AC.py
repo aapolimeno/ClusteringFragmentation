@@ -12,6 +12,7 @@ from sklearn.metrics.cluster import homogeneity_completeness_v_measure
 from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
 from sklearn.feature_extraction.text import CountVectorizer
 import spacy
+import itertools
 from itertools import product
 import numpy as np
 
@@ -23,10 +24,13 @@ import numpy as np
 
 
 # =================== Load data ===================
-data = pd.read_csv('../../data/new_split/new_dev.csv', index_col=0)
-#data = pd.read_csv('../../data/new_split/new_dev.csv', index_col=0)
+# data = pd.read_csv('../../data/new_split/new_dev.csv', index_col=0)
+
+data = pd.read_csv('../../data/CIT_DeskDrop/shared_articles.csv', index_col=0)
+
 urls = data['url'].tolist()
 sentences = data['text'].tolist()
+content_ids = data["contentId"].tolist()
 
 
 # =================== Get embeddings =================== 

@@ -41,6 +41,10 @@ articles["url"] = urls
 content_ids = articles["contentId"].tolist()
 
 
+
+
+
+
 cit_to_hlgd = pd.DataFrame()
 cit_to_hlgd["content_id"] = content_ids
 cit_to_hlgd["url"] = urls
