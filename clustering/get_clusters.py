@@ -12,21 +12,17 @@ from sklearn.metrics.cluster import homogeneity_completeness_v_measure
 from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
 from sklearn.feature_extraction.text import CountVectorizer
 import spacy
-from nltk import tokenize
-import tensorflow_hub as hub
 
 ### In case you have to download the SpaCy word embeddings, run this: 
     
 #from spacy.cli import download
 # download("en_core_web_md") 
 
-embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
 
 # =================== Load data ===================
 data = pd.read_csv('../../data/new_split/new_test.csv', index_col=0)
 #data = pd.read_csv('../../data/new_split/new_dev.csv', index_col=0)
-data = data[:2]
 urls = data['url'].tolist()
 sentences = data['text'].tolist()
 
@@ -54,19 +50,6 @@ def get_representation(sentences, method = "word"):
         for sent in sentences: 
            doc = nlp(sent)
            embeddings.append(doc.vector) 
-           
-    if method == "word_sent":
-        
-        sents = []
-
-        for sent in sentences: 
-                sentence = tokenize.sent_tokenize(sent)
-                sents.append(sentence)
-                
-        embeddings = embed(sentences)
-
-        print("embeddings: ", embeddings)
-
         
     
     if method == "BoW": 
@@ -75,19 +58,19 @@ def get_representation(sentences, method = "word"):
     return embeddings
     
 
-def get_clusters(embeddings, method, distance, alg = "AC"):
+def get_clusters(embeddings, method, alg):
     
     
     if alg == "AC":
 
-# =============================================================================
-#         if method == "BoW" :
-#             distance_threshold = 250
-#         else: 
-#             distance_threshold = 5
-# =============================================================================
+        if method == "BoW" :
+            distance_threshold = 124
+        if method == "word": 
+            distance_threshold = 4
+        if method == "SBERT": 
+            distance_threshold = 5 
             
-        clustering_model = AgglomerativeClustering(n_clusters = None, linkage = 'ward', distance_threshold = distance) #, affinity='cosine', linkage='average', distance_threshold=0.4)
+        clustering_model = AgglomerativeClustering(n_clusters = None, linkage = 'ward', distance_threshold = distance_threshold) #, affinity='cosine', linkage='average', distance_threshold=0.4)
     
         clustering_model.fit(embeddings)
         cluster_assignment = clustering_model.labels_
@@ -103,13 +86,13 @@ def get_clusters(embeddings, method, distance, alg = "AC"):
         
         if method == "SBERT": 
             ep = 1
-            min_samples = 96.5
+            min_samples = 32
         if method == "BoW": 
-            ep = 0.5
-            min_samples = 41.5
+            ep = 7
+            min_samples = 1
         if method == "word": 
-            ep = 14.5
-            min_samples = 0.5
+            ep = 1
+            min_samples = 1
         
         clustering = DBSCAN(eps=ep, min_samples=min_samples).fit(embeddings)
         cluster_assignment = clustering.labels_
@@ -120,8 +103,9 @@ def get_clusters(embeddings, method, distance, alg = "AC"):
 
 # ============ Represent the articles with the desired method ============
 # Options: SBERT (sentence embeddings), word (word embeddings), BoW (Bag of Words)
-#methods = ["SBERT", "word", "BoW"]
-methods = ["word_sent"]
+methods = ["SBERT", "word", "BoW"]
+#methods = ["SBERT"]
+algs = ["AC", "DBScan"]
 
 pred_clusters = pd.DataFrame(urls, columns = ['url'])
 
@@ -138,44 +122,45 @@ sils = []
 dbs = []
 chs = []
 
-distance = 2
 
 for method in methods:
         print("===================================================================")
         print(f"Get article representation with method {method}...")
         embeddings = get_representation(sentences, method = method)
         print(f"Performing agglomerative hierarchical clustering for {method} representations...")
+        
+        for alg in algs:
        
-        clusters = get_clusters(embeddings, method, distance, alg = "AC")
-        #print(set(clusters))
-        print(f"Save {method} clustering outcome...")
-        pred_clusters[f'{method}_AC_{distance}'] = clusters
-        
-        # Calculate V-measure 
-        
-        pred = clusters
-        label = f"{method}_AC_{distance}"
-        hcv = homogeneity_completeness_v_measure(true, pred)
-        if len(set(clusters)) > 1: 
-            sil = silhouette_score(embeddings, clusters, metric="euclidean")
-            db = davies_bouldin_score(embeddings, clusters)
-            ch = calinski_harabasz_score(embeddings, clusters)
-        else: 
-            sil = 0
-            db = 0
-            ch = 0
+            clusters = get_clusters(embeddings, method, alg = alg)
+            #print(set(clusters))
+            print(f"Save {method} clustering outcome...")
+            pred_clusters[f'{method}_{alg}'] = clusters
             
-        df = pd.DataFrame(columns = ["model", "homogeneity", "completeness", "v_measure", "sil", "db", "ch"])
-        
-        add = [label, hcv[0], hcv[1], hcv[2], sil, db, ch]
-        
-        labels.append(label)
-        homs.append(hcv[0])
-        comps.append(hcv[1])
-        v_measures.append(hcv[2])
-        sils.append(sil)
-        dbs.append(db)
-        chs.append(ch)
+            # Calculate V-measure 
+            
+            pred = clusters
+            label = f"{method}_{alg}"
+            hcv = homogeneity_completeness_v_measure(true, pred)
+            if len(set(clusters)) > 1: 
+                sil = silhouette_score(embeddings, clusters, metric="euclidean")
+                db = davies_bouldin_score(embeddings, clusters)
+                ch = calinski_harabasz_score(embeddings, clusters)
+            else: 
+                sil = 0
+                db = 0
+                ch = 0
+                
+            df = pd.DataFrame(columns = ["model", "homogeneity", "completeness", "v_measure", "sil", "db", "ch"])
+            
+            add = [label, hcv[0], hcv[1], hcv[2], sil, db, ch]
+            
+            labels.append(label)
+            homs.append(hcv[0])
+            comps.append(hcv[1])
+            v_measures.append(hcv[2])
+            sils.append(sil)
+            dbs.append(db)
+            chs.append(ch)
 
 
 eval_scores = pd.DataFrame()
@@ -193,10 +178,20 @@ print("All done!")
 print("===================================================================")
 
 
+pred_clusters["gold"] = true
+
+
+chain2 = pred_clusters.loc[pred_clusters["gold"] == 2]
+chain4 = pred_clusters.loc[pred_clusters["gold"] == 4]
+chain5 = pred_clusters.loc[pred_clusters["gold"] == 5]
+chain6 = pred_clusters.loc[pred_clusters["gold"] == 6]
+chain7 = pred_clusters.loc[pred_clusters["gold"] == 7]
+chain8 = pred_clusters.loc[pred_clusters["gold"] == 8]
+chain9 = pred_clusters.loc[pred_clusters["gold"] == 9]
 
     
-#pred_clusters.to_csv('../../data/hlgd_predictions/evaluation_AC_test/preds_test_3_7.csv', index = True)
-#eval_scores.to_csv("../../data/hlgd_predictions/evaluation_AC_test/eval_scores_test_3_7.csv", index = True)
+pred_clusters.to_csv('../../data/hlgd_predictions/evaluation_AC_test/preds_test_final.csv', index = True)
+eval_scores.to_csv("../../data/hlgd_predictions/evaluation_AC_test/eval_scores_test_final.csv", index = True)
 
 # best_sbert = pred_clusters["SBERT_AC_5"].tolist()
 # best_word = pred_clusters["word_AC_4"].tolist()
