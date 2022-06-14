@@ -6,12 +6,12 @@ Created on Tue May 17 13:29:35 2022
 """
 
 import pandas as pd
-import random
 import math
 from scipy.stats import entropy
 from numpy.linalg import norm
 import itertools
-from numpy import mean
+from numpy import mean, std
+import ast
 
 # =================== FUNCTIONS ===================
 
@@ -96,7 +96,7 @@ def compute_kl_divergence(s, q, alpha=0.001):
         #     qq.append(q_score)
     kl = entropy(ss, qq, base=2)
     jsd = JSD(ss,qq)
-    return [kl, jsd]
+    return jsd
 
 
 def KL_symmetric(a, b):
@@ -140,38 +140,103 @@ def compare_recommendations(x, y):
     
     
     
-# ======================== GENERATE RANDOM RECOMMENDATIONS ========================
-users = [i for i in range(717)] # 100 users 
+# ======================== LOAD RECOMMENDATIONS ========================
 
-random_recs = pd.DataFrame()
-random_recs["user_id"] = users
+c = [0,1,2,3,4,5,6,7,8,9]
 
-recs = []
+frag_gold = []
+frag_base = []
+frag_sbert_ac = []
+frag_sbert_db = []
+frag_word_ac = []
+frag_word_db = []
+frag_bow_ac = []
+frag_bow_db = []
 
-chains = [2,4,5,6,7,8,9]
+for num in c: 
 
-for user in users: 
-    rec = random.choices(chains, k = 20) # 15 recs per user 
-    recs.append(rec)
+    recs = pd.read_csv(f"../../data/recommendations/final_recs/scen3_balanced_frag_7_{num}.csv", index_col = 0)
     
-random_recs["chains"] = recs
-
-
-
-# get combinations for all users 
-#for L in range(0, len(recs)+1):
-#    for subset in itertools.combinations(recs, L):
-#       print(subset)
-
-# ======================== CALCULATE DIVERSION ========================
-
-combinations = list(itertools.combinations(recs, 2))
-
-all_divergences = []
-
-for comb in combinations: 
-    divergence = compare_recommendations(comb[0], comb[1])
-    all_divergences.append(divergence[0])
-    all_divergences.append(divergence[1])    
+    # Extract the recs for each method
+    gold_as_str = recs["gold"].tolist()
+    baseline_as_str = recs["baseline"].tolist()
+    sbert_ac_as_str = recs["SBERT_AC"].tolist()
+    sbert_db_as_str = recs["SBERT_DB"].tolist()
+    word_ac_as_str = recs["word_AC"].tolist()
+    word_db_as_str = recs["word_DB"].tolist()
+    bow_ac_as_str = recs["bow_AC"].tolist()
+    bow_db_as_str = recs["bow_DB"].tolist()
     
-print(mean(all_divergences))
+    
+    def st_to_list(lst): 
+        new = []
+        for item in lst: 
+            item = ast.literal_eval(item)
+            new.append(item)
+        return new
+    
+    # Convert strings to lists 
+    gold = st_to_list(gold_as_str)
+    baseline = st_to_list(baseline_as_str)
+    sbert_ac = st_to_list(sbert_ac_as_str)
+    sbert_db = st_to_list(sbert_db_as_str)
+    word_ac = st_to_list(word_ac_as_str)
+    word_db = st_to_list(word_db_as_str)
+    bow_ac = st_to_list(bow_ac_as_str)
+    bow_db = st_to_list(bow_db_as_str)
+    
+    
+    
+    
+    # ======================== CALCULATE DIVERSION ========================
+    fragmentation = pd.DataFrame()
+    
+    def calculate_fragmentation(recommendations): 
+        combinations = list(itertools.combinations(recommendations, 2))
+        
+        all_divergences = []
+        
+        for comb in combinations: 
+            divergence = compare_recommendations(comb[0], comb[1])
+            all_divergences.append(divergence)
+            #all_divergences.append(divergence[1])    
+            
+        mean_frag = mean(all_divergences)
+        return mean_frag
+    
+    gold_frag = calculate_fragmentation(gold)
+    base_frag = calculate_fragmentation(baseline)
+    sbert_ac_frag = calculate_fragmentation(sbert_ac)
+    sbert_db_frag = calculate_fragmentation(sbert_db)
+    word_ac_frag = calculate_fragmentation(word_ac)
+    word_db_frag = calculate_fragmentation(word_db)
+    bow_ac_frag = calculate_fragmentation(bow_ac)
+    bow_db_frag = calculate_fragmentation(bow_db)
+    
+    frag_gold.append(gold_frag)
+    frag_base.append(base_frag)
+    frag_sbert_ac.append(sbert_ac_frag)
+    frag_sbert_db.append(sbert_db_frag)
+    frag_word_ac.append(word_ac_frag)
+    frag_word_db.append(word_db_frag)
+    frag_bow_ac.append(bow_ac_frag)
+    frag_bow_db.append(bow_db_frag)
+    
+    
+mean_base = mean(frag_base)
+mean_gold = mean(frag_gold)
+mean_sbert_ac= mean(frag_sbert_ac)
+mean_sbert_db= mean(frag_sbert_db)
+mean_word_ac = mean(frag_word_ac)
+mean_word_db = mean(frag_word_db)
+mean_bow_ac = mean(frag_bow_ac)
+mean_bow_db = mean(frag_bow_db)
+
+std_base = std(frag_base)
+std_gold = std(frag_gold)
+std_sbert_ac= std(frag_sbert_ac)
+std_sbert_db= std(frag_sbert_db)
+std_word_ac = std(frag_word_ac)
+std_word_db = std(frag_word_db)
+std_bow_ac = std(frag_bow_ac)
+std_bow_db = std(frag_bow_db)
