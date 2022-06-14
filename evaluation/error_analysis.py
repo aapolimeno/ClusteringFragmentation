@@ -7,6 +7,8 @@ Created on Tue Jun 14 12:03:23 2022
 
 import pandas as pd
 
+full_data = pd.read_csv("../../data/new_split/new_test.csv", index_col = 0)
+
 data = pd.read_csv("../../data/hlgd_predictions/best/preds_test_final.csv", index_col = 0)
 
 gold = set(data["gold"].tolist())
@@ -69,3 +71,10 @@ db1 = data.loc[data["SBERT_DBScan"] == 1]
 db2 = data.loc[data["SBERT_DBScan"] == 2]
 db3 = data.loc[data["SBERT_DBScan"] == 3]
 db4 = data.loc[data["SBERT_DBScan"] == -1]
+
+
+index_8 = s8.index.tolist()
+texts = []
+for index in index_8: 
+    text = full_data.iloc[[index]]
+    texts.append(text)
