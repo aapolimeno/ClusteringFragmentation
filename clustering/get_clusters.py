@@ -104,9 +104,9 @@ def get_clusters(embeddings, method, alg):
 # ============ Represent the articles with the desired method ============
 # Options: SBERT (sentence embeddings), word (word embeddings), BoW (Bag of Words)
 methods = ["SBERT", "word", "BoW"]
-#methods = ["SBERT"]
+methods = ["SBERT"]
 algs = ["AC", "DBScan"]
-
+algs = ["AC"]
 pred_clusters = pd.DataFrame(urls, columns = ['url'])
 
 #distance_thresholds = [4,5,6,7,8,9,124,134,144]

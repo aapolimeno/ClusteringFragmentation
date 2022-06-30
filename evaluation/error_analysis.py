@@ -15,6 +15,7 @@ gold = set(data["gold"].tolist())
 sbert_ac = set(data["SBERT_AC"].tolist())
 sbert_db = set(data["SBERT_DBScan"].tolist())
 word_ac = set(data["word_AC"].tolist())
+glove_db = set(data["word_DBScan"].tolist())
 
 # GOLD 
 c2 =  data.loc[data['gold'] == 2]
@@ -72,6 +73,31 @@ db2 = data.loc[data["SBERT_DBScan"] == 2]
 db3 = data.loc[data["SBERT_DBScan"] == 3]
 db4 = data.loc[data["SBERT_DBScan"] == -1]
 
+# DB_GloVe
+g0 = data.loc[data["word_DBScan"] == 0]
+g1 = data.loc[data["word_DBScan"] == 1] # 776 
+g2 = data.loc[data["word_DBScan"] == 2] # 781 
+
+
+inspect_texts = []
+nums = [0, 27, 41, 52, 100, 111, 113, 118, 175, 181, 193, 197, 199, 275, 317, 
+        499, 503, 575, 591, 633, 682, 700, 705, 722, 741, 765, 808, 824, 929, 968, 1002, 1008]
+for num in nums: 
+    df = full_data.iloc[num]
+    text = df["text"]
+    inspect_texts.append(text)
+
+for text in inspect_texts:
+    print(text)
+    print()
+    
+
+t776 = full_data.iloc[776]
+print(t776["text"])
+
+
+t781 = full_data.iloc[781]
+print(t781["text"])
 
 index_8 = s8.index.tolist()
 texts = []
