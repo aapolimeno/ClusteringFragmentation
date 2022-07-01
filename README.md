@@ -1,7 +1,7 @@
 # ClusteringFragmentation
 
 This repository contains the following folders: 
-### code 
+## code 
 
 #### clustering
 - get_clusters.py contains the code for 3 text representation methods (Bag of Words, GloVe word embeddings, and Sentence-BERT sentence embeddings), as well as 2 clustering algorithms (agglomerative hierarchical clustering and DB-Scan) 
@@ -18,9 +18,9 @@ Contains all scripts that are used to explore, filter and split the data.
 - hlgd_extraction.py contains the code with which the texts in the HeadLine Grouping Dataset can be scraped
 
 
-### data
+## data
 - Containing the evaluation and development set. Each row contains a URL, the corresponding text, and the gold label. 
-### predictions 
+## predictions 
 - eval_scores.csv contains the values of the evaluation metrics for each experimental setup 
 - preds_eval.csv contains the predicted label of each setup. 
 
