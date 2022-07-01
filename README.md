@@ -19,7 +19,7 @@ Contains all scripts that are used to explore, filter and split the data.
 
 
 ## data
-- Containing the evaluation and development set. Each row contains a URL, the corresponding text, and the gold label. 
+- Containing the evaluation and development set. Each row contains a URL, the corresponding text, and the gold label. The data consists of news articles that are scraped from the URLs provided by the HeadLine Grouping Dataset. 
 ## predictions 
 - eval_scores.csv contains the values of the evaluation metrics for each experimental setup 
 - preds_eval.csv contains the predicted label of each setup. 
