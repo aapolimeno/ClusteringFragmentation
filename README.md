@@ -1,21 +1,27 @@
 # ClusteringFragmentation
 
-This repository contains the following scripts: 
-- hlgd_extraction.py To scrape articles from the URL present in the HLGD dataset
-- hlgd_clean.py To filter out irrelevant articles 
-- clustering.py To perform Hierarchical Clustering with Bag of Words representations of the articles 
+This repository contains the following folders: 
+### code 
+
+#### clustering
+- get_clusters.py contains the code for 3 text representation methods (Bag of Words, GloVe word embeddings, and Sentence-BERT sentence embeddings), as well as 2 clustering algorithms (agglomerative hierarchical clustering and DB-Scan) 
+- hyperparam_tuning_AC.py and hyperparam_tuning_DB.py were used for hyperparameter tuning of both algorithms 
+- get_baseline_clusters.py generates the baseline clusters (with TF-IDF representations and the Louvain Community Detection Algorithm) 
+
+#### evaluation
+- error_analysis.py contains the code that was used for the error analysis 
+- get_best.py selects the best-performing systems and writes them to a new file
+- get_frag.py generates news recommendation sets and calculates the Fragmentation Score for the experimental setups based on different scenarios 
+
+#### preprocess_data
+Contains all scripts that are used to explore, filter and split the data.
+- hlgd_extraction.py contains the code with which the texts in the HeadLine Grouping Dataset can be scraped
 
 
-
-Step 1: Extract and preprocess data 
-- Obtain and clean the HLGD data set containing train, test and dev data
-a) Scrape the articles of train/test/dev with hlgd_extraction.py
-b) Filter irrelevant/incorrect articles for train/test/dev sets with their corresponding hlgd_clean.py script
-c) Merge train and test with merge_train_test.py
-
-
-Step 2: Perform clustering 
+### data
+- Containing the evaluation and development set. Each row contains a URL, the corresponding text, and the gold label. 
+### predictions 
+- eval_scores.csv contains the values of the evaluation metrics for each experimental setup 
+- preds_eval.csv contains the predicted label of each setup. 
 
 
-Step 3: Generate recommendations 
-- For random recommendations, run random_recs.py

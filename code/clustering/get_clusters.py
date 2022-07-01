@@ -21,7 +21,7 @@ import spacy
 
 
 # =================== Load data ===================
-data = pd.read_csv('../../data/new_split/new_test.csv', index_col=0)
+data = pd.read_csv('data/hlgd_eval.csv', index_col=0)
 #data = pd.read_csv('../../data/new_split/new_dev.csv', index_col=0)
 urls = data['url'].tolist()
 sentences = data['text'].tolist()
@@ -190,46 +190,6 @@ chain8 = pred_clusters.loc[pred_clusters["gold"] == 8]
 chain9 = pred_clusters.loc[pred_clusters["gold"] == 9]
 
     
-pred_clusters.to_csv('../../data/hlgd_predictions/evaluation_AC_test/preds_test_final.csv', index = True)
-eval_scores.to_csv("../../data/hlgd_predictions/evaluation_AC_test/eval_scores_test_final.csv", index = True)
-
-# best_sbert = pred_clusters["SBERT_AC_5"].tolist()
-# best_word = pred_clusters["word_AC_4"].tolist()
-# best_bow = pred_clusters["BoW_AC_124"].tolist()
-# best_preds = pd.DataFrame()
-# best_preds["SBERT_ACH"] = best_sbert
-# best_preds["word_AHC"] = best_word
-# best_preds["BoW_AHC"] = best_bow
-# best_preds["gold"] = true
-
-
-#best_preds.to_csv("../../data/hlgd_predictions/evaluation_AC_test/best_test_3_7.csv")
-
-
-# best_eval_scores = pd.DataFrame()
-#
-#
-# best_sbert_scores = eval_scores.loc[eval_scores["model"] == "SBERT_AC_5"]
-# best_word_scores = eval_scores.loc[eval_scores["model"] == "word_AC_4"]
-# best_bow_scores = eval_scores.loc[eval_scores["model"] == "BoW_AC_124"]
-#
-#
-# best_eval_scores = best_eval_scores.append(best_sbert_scores, ignore_index = True)
-# best_eval_scores = best_eval_scores.append(best_word_scores, ignore_index = True)
-# best_eval_scores = best_eval_scores.append(best_bow_scores, ignore_index = True)
-
-# best_eval_scores.to_csv("../../data/hlgd_predictions/evaluation_AC_test/best_eval_scores_test_3_7.csv")
-
-
-#v_measure.to_csv("../../data/hlgd_predictions/eval_scores_devbig.csv")
-
-
-#pred = pred_clusters["word_pred"]
-#hcv = homogeneity_completeness_v_measure(true, pred)
-    
-# print(set(clusters))
-
-# ============ Save ============ 
-#pred_clusters.to_csv('../../data/hlgd_predictions/predictions_raw.csv', index = True)
-
+pred_clusters.to_csv('predictions/preds_eval.csv', index = True)
+eval_scores.to_csv("predictions/eval_scores.csv", index = True)
 
