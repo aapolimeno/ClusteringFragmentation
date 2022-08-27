@@ -19,7 +19,7 @@ Two clustering methods are applied to the articles to obtain the groups of news 
 ## Repository Overvies
 What follows is an overview of the scripts that were used for data scraping and cleaning, obtaining machine-readable text representations, applying clustering algorithms, and evaluation, as well as the dataset and results. 
 
-### 'data' 
+### `data` 
 The dataset consists of news articles that are annotated with the news story chain that they belong to. They are scraped from the URLs provided by the [HeadLine Grouping Dataset](https://huggingface.co/datasets/hlgd).
 The data is split into a development and evaluation set. Each row contains a URL, the corresponding text, and the gold label. 
 
