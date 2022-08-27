@@ -1,6 +1,6 @@
 # Detecting Fragmentation in News Story Chains
 
-This repository is part of my Research Master thesis "Diversifying News Recommendation Systems by Detecting Fragmentation in News Story Chains". 
+This repository is part of the Research Master thesis "Diversifying News Recommendation Systems by Detecting Fragmentation in News Story Chains" by Alessandra Polimeno. 
 
 ## Background 
 This thesis contributes to a line of research that aims to develop measures for diversity in the context of personalized news recommendation systems. The focus lies on the 
@@ -30,7 +30,7 @@ Contains all scripts that are used to explore, filter and split the data.
 
 #### `clustering`
 - `get_clusters.py` contains the code for 3 text representation methods (Bag of Words, GloVe word embeddings, and Sentence-BERT sentence embeddings), as well as 2 clustering algorithms (agglomerative hierarchical clustering and DB-Scan) 
-- `hyperparam_tuning_AC.py` and hyperparam_tuning_DB.py were used for hyperparameter tuning of both algorithms 
+- `hyperparam_tuning_AC.py` and `hyperparam_tuning_DB.py` were used for hyperparameter tuning of both algorithms 
 - `get_baseline_clusters.py` generates the baseline clusters (with TF-IDF representations and the Louvain Community Detection Algorithm) 
 
 #### `evaluation`
@@ -47,4 +47,4 @@ The result of the evaluation can be found in this folder.
 ## Acknowledgements 
 The Fragmentation metric that is implemented is developed by Sanne Vrijenhoek. 
 For further reading see: 
-S. Vrijenhoek, M. Kaya, N. Metoui, J. M ̈oller, D. Odijk, and N. Helberger. Recommenders with a mission: assessing diversity in news recommendations. In Proceedings of the 2021 Conference on Human Information Interaction and Retrieval, pages 173–183, 2021.
+- S. Vrijenhoek, M. Kaya, N. Metoui, J. M ̈oller, D. Odijk, and N. Helberger. Recommenders with a mission: assessing diversity in news recommendations. In Proceedings of the 2021 Conference on Human Information Interaction and Retrieval, pages 173–183, 2021.
