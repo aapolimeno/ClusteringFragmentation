@@ -16,13 +16,14 @@ Two clustering methods are applied to the articles to obtain the groups of news 
 * Agglomerative Hierarchical Clustering 
 * DB-Scan 
 
+## Repository Overvies
 What follows is an overview of the scripts that were used for data scraping and cleaning, obtaining machine-readable text representations, applying clustering algorithms, and evaluation, as well as the dataset and results. 
 
-## data 
+### 'data' 
 The dataset consists of news articles that are annotated with the news story chain that they belong to. They are scraped from the URLs provided by the [HeadLine Grouping Dataset](https://huggingface.co/datasets/hlgd).
 The data is split into a development and evaluation set. Each row contains a URL, the corresponding text, and the gold label. 
 
-## code
+### code
 #### preprocess_data
 Contains all scripts that are used to explore, filter and split the data.
 - hlgd_extraction.py contains the code with which the texts in the HeadLine Grouping Dataset can be scraped
@@ -37,7 +38,7 @@ Contains all scripts that are used to explore, filter and split the data.
 - get_best.py selects the best-performing systems and writes them to a new file
 - get_frag.py generates news recommendation sets and calculates the Fragmentation Score for the experimental setups based on different scenarios 
 
-## predictions 
+### predictions 
 The result of the evaluation can be found in this folder. 
 - eval_scores.csv contains the values of the evaluation metrics for each experimental setup 
 - preds_eval.csv contains the predicted label of each setup. 
