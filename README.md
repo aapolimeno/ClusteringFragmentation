@@ -1,6 +1,6 @@
 # Detecting Fragmentation in News Story Chains
 
-This repository is part of the Research Master thesis "Diversifying News Recommendation Systems by Detecting Fragmentation in News Story Chains" by Alessandra Polimeno. 
+This repository is part of the Research Master thesis "Diversifying News Recommendation Systems by Detecting Fragmentation in News Story Chains" by Alessandra Polimeno. The project was supervised by prof. dr. Antske Fokkens, Myrthe Reuver and Sanne Vrijenhoek. 
 
 ## Background 
 This thesis contributes to a line of research that aims to develop measures for diversity in the context of personalized news recommendation systems. The focus lies on the 
@@ -8,7 +8,7 @@ Fragmentation metric, which measures the overlap in news story chains that users
 of articles that report on the same action that took place at a specific time. 
 
 This code allows you to transform texts into three types of representations: 
-* A simple Bag of Words
+* Bag of Words (BoW)
 * Word embeddings (GloVe) 
 * Sentence embeddings (Sentence-BERT) 
 
@@ -16,7 +16,7 @@ Two clustering methods are applied to the articles to obtain the groups of news 
 * Agglomerative Hierarchical Clustering 
 * DB-Scan 
 
-## Repository Overvies
+## Repository Overview
 What follows is an overview of the scripts that were used for data scraping and cleaning, obtaining machine-readable text representations, applying clustering algorithms, and evaluation, as well as the dataset and results. 
 
 ### `data` 
